@@ -4,6 +4,43 @@ Previously called "Weather_Sim_4"
 
 This projects aims to produce a semirealistic two-dimensional, realtime, interactive simulation of the weather in earth's troposphere.
 
+## Features
+- Simulate weather patterns in a 2D environment.
+- Load example save files or your own custom save files.
+- Customize simulation parameters like resolution and height.
+
+## How to Use
+1. **Load a Save File**:
+   - You can load a save file in two ways:
+     - **Example Save Files**: Use the dropdown menu to select an example save file and click "Load Selected Save."
+     - **Custom Save File**: Use the "Load Save File" input to upload your own `.weathersandbox` file.
+
+2. **Start the Simulation**:
+   - After loading a save file, click the "Create New Simulation" button to start the simulation.
+
+3. **Customize Parameters**:
+   - Adjust the horizontal resolution, vertical resolution, and simulation height using the sliders before starting the simulation.
+
+## Notes
+- Once you load your save file, you must click "Create New Simulation" to start the simulation.
+- For best results, use a vertical resolution of 300 and a GPU with GTX 1070 or better.
+
+## Controls
+- **Mouse**:
+  - Middle mouse button: Drag the simulation area.
+  - Mouse wheel: Zoom in/out or change brush size (hold `B`).
+  - Left mouse button: Use the selected tool.
+- **Keyboard**:
+  - `1-9`: Display modes.
+  - `Q-Y`: Tools.
+  - `Space`: Pause/Resume.
+  - `Esc`: No tool/Flashlight.
+  - `Arrows`: Move view.
+  - `+/-`: Zoom in/out.
+  - See the full list of controls in the application.
+
+## Support
+If you enjoy this project, consider supporting its development on [Patreon](https://www.patreon.com/user?u=76043935).
 
 ## Clouds and precipitation
 Simulating clouds and precipitation are the main objectives of this project.

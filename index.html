@@ -244,34 +244,33 @@
 
         <p style="margin-top: 70px;">
             <label for="fileInput">Load Save File:</label>
-            <input type="file" id="fileInput" name="fileInput" accept=".weathersandbox " onchange="loadData()" />
+            <input type="file" id="fileInput" name="fileInput" accept=".weathersandbox" onchange="loadLocalFile()" />
         </p>
 
         <div class="example-files">
             <h3>Example Save Files</h3>
-            <p><a style="color: white" href="./saves/Background image.weathersandbox">Background image</a></p>
-            <p><a style="color: white" href="./saves/Hotlake Valley.weathersandbox">Hotlake Valley</a></p>
-            <p><a style="color: white" href="./saves/Mountain uplift cell.weathersandbox">Mountain Uplift Cell at
-                    sunset</a></p>
-            <p><a style="color: white" href="./saves/480 km map with strong derecho.weathersandbox">480 km map with
-                    strong Derecho</a></p>
-            <p><a style="color: white" href="./saves/Three Nice Cells.weathersandbox">Three Nice Cells</a></p>
-            <p><a style="color: white" href="./saves/Mountain Snow Storm.weathersandbox">Mountain Snow Storm</a></p>
-            <p><a style="color: white" href="./saves/Powerful & Longlasting Cell.weathersandbox">Powerful & Longlasting
-                    Cell</a></p>
-            <p><a style="color: white" href="./saves/Rain Sucked Up.weathersandbox">Powerful updraft sucking up rain and
-                    turning it into hail.</a></p>
-            <p><a style="color: white" href="./saves/Powerful Hail and Snow Cells.weathersandbox">Powerful Hail and Snow
-                    Cells</a></p>
-            <p><a style="color: white" href="./saves/Very nice cell over coastal mountain.weathersandbox">Very nice cell
-                    over coastal mountain</a></p>
-            <p><a style="color: white" href="./saves/Awesome Convergence Cell.weathersandbox">Awesome Convergence
-                    Cell</a></p>
-            <p><a style="color: white" href="./saves/Two nice cells in lake valley.weathersandbox">Two nice cells in
-                    lake valley</a></p>
-            <p><a style="color: white" href="./saves/Insane CAPE.weathersandbox">Insane CAPE</a></p>
-            <p><a style="color: white" href="./saves/100 X 100 Test.weathersandbox">100 X 100 Test</a></p>
+            <select id="exampleSavesDropdown" style="color: black; padding: 5px; border-radius: var(--border-radius);" onchange="loadDropdownFile()">
+                <option value="./saves/Background image.weathersandbox">Background image</option>
+                <option value="./saves/Hotlake Valley.weathersandbox">Hotlake Valley</option>
+                <option value="./saves/Mountain uplift cell.weathersandbox">Mountain Uplift Cell at sunset</option>
+                <option value="./saves/480 km map with strong derecho.weathersandbox">480 km map with strong Derecho</option>
+                <option value="./saves/Three Nice Cells.weathersandbox">Three Nice Cells</option>
+                <option value="./saves/Mountain Snow Storm.weathersandbox">Mountain Snow Storm</option>
+                <option value="./saves/Powerful & Longlasting Cell.weathersandbox">Powerful & Longlasting Cell</option>
+                <option value="./saves/Rain Sucked Up.weathersandbox">Powerful updraft sucking up rain and turning it into hail</option>
+                <option value="./saves/Powerful Hail and Snow Cells.weathersandbox">Powerful Hail and Snow Cells</option>
+                <option value="./saves/Very nice cell over coastal mountain.weathersandbox">Very nice cell over coastal mountain</option>
+                <option value="./saves/Awesome Convergence Cell.weathersandbox">Awesome Convergence Cell</option>
+                <option value="./saves/Two nice cells in lake valley.weathersandbox">Two nice cells in lake valley</option>
+                <option value="./saves/Insane CAPE.weathersandbox">Insane CAPE</option>
+                <option value="./saves/100 X 100 Test.weathersandbox">100 X 100 Test</option>
+            </select>
+            <input type="button" value="Load Selected Save" onclick="loadSelectedSave()" />
         </div>
+
+        <p style="color: white; margin-top: 10px;">
+            <i>Note: Once you load your save file, you need to click "Create New Simulation" to start the simulation.</i>
+        </p>
 
         <div id="help" class="tips">
             <h2>Tips</h2>
@@ -435,6 +434,64 @@
     <canvas id="mainCanvas">
         Your browser does not support HTML5, you must be using a really old browser!
     </canvas>
+    <script>
+        function loadSelectedSave() {
+            const dropdown = document.getElementById('exampleSavesDropdown');
+            const selectedFile = dropdown.value;
+
+            fetch(selectedFile)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch file: ${response.statusText}`);
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const fileInput = document.getElementById('fileInput');
+                    const file = new File([blob], selectedFile.split('/').pop(), { type: blob.type });
+
+                    // Create a DataTransfer object to simulate file input
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    fileInput.files = dataTransfer.files;
+
+                    console.log(`Loaded save file: ${file.name}`);
+                    loadLocalFile(); // Automatically process the file
+                })
+                .catch(error => {
+                    console.error('Error loading selected save:', error);
+                });
+        }
+
+        function loadLocalFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const fileContent = event.target.result;
+                    console.log('Loaded local file:', file.name);
+                    // Add your logic to process the fileContent and load it into the simulator
+                    runSimulator(fileContent); // Automatically run the simulator with the loaded file
+                };
+                reader.readAsText(file);
+            } else {
+                console.log('No file selected.');
+            }
+        }
+
+        function runSimulator(fileContent) {
+            console.log('Running simulator with the loaded file...');
+            // Add your logic here to initialize and run the simulator with the provided file content
+            // Example: pass the fileContent to your simulation initialization function
+            initializeSimulation(fileContent);
+        }
+
+        function initializeSimulation(data) {
+            console.log('Simulation initialized with data:', data);
+            // Add your simulation logic here
+        }
+    </script>
 </body>
 
 </html>
