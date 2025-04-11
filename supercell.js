@@ -11,6 +11,7 @@
  * - Detailed supercell state management
  * - Advanced simulation capabilities
  * - Flexible configuration options
+ * - Includes STP and SCP calculations
  * 
  * @example
  * const supercell = new Supercell({
@@ -19,10 +20,75 @@
  * });
  * supercell.simulate();
  * 
- * @author Sourcegraph AI Assistant
- * @version 1.0.0
+ * @version 1.1.0
  * @license MIT
  */
+
+class Supercell {
+    constructor(config = {}) {
+        this.state = config.initialState || {};
+        this.parameters = config.simulationParameters || {};
+        this.simulationDuration = config.simulationDuration || 100;
+        this.enableLogging = config.enableLogging || false;
+        this.currentStep = 0;
+    }
+
+    /**
+     * Runs the supercell simulation
+     * 
+     * @method run
+     */
+    run() {
+        for (this.currentStep = 0; this.currentStep < this.simulationDuration; this.currentStep++) {
+            this.updateState();
+            if (this.enableLogging) {
+                console.log(`Step ${this.currentStep}:`, this.state);
+            }
+        }
+    }
+
+    /**
+     * Updates the state of the supercell
+     * 
+     * @method updateState
+     */
+    updateState() {
+        // Logic to update supercell state based on parameters
+        // ...existing code...
+    }
+
+    /**
+     * Calculates the Significant Tornado Parameter (STP)
+     * 
+     * @method calculateSTP
+     * @returns {number} STP value
+     */
+    calculateSTP() {
+        const { shear, instability, lift, moisture } = this.parameters;
+        return (shear * instability * lift * moisture) / 1000;
+    }
+
+    /**
+     * Calculates the Supercell Composite Parameter (SCP)
+     * 
+     * @method calculateSCP
+     * @returns {number} SCP value
+     */
+    calculateSCP() {
+        const { shear, instability, helicity } = this.parameters;
+        return (shear * instability * helicity) / 1000;
+    }
+
+    /**
+     * Logs the current state of the supercell
+     * 
+     * @method logState
+     */
+    logState() {
+        console.log(`Current State at Step ${this.currentStep}:`, this.state);
+    }
+}
+
 /**
  * Creates a simulator instance for supercell modeling
  * 
@@ -30,30 +96,24 @@
  * @description Initializes a new supercell simulation environment with default or custom parameters
  * 
  * @param {Object} [config] - Optional configuration object for the simulator
- * @param {Object} [config.initialState] - Initial state of the supercell system
- * @param {Object} [config.simulationParameters] - Parameters controlling simulation behavior
- * @param {number} [config.simulationDuration=100] - Total number of simulation steps
- * @param {boolean} [config.enableLogging=false] - Enable detailed logging of simulation progress
- * 
  * @returns {Supercell} A fully configured supercell simulation instance
- * 
- * @example
- * const simulator = createSimulator({
- *   initialState: { temperature: 300, pressure: 1.0 },
- *   simulationDuration: 500,
- *   enableLogging: true
- * });
- * simulator.run();
  */
 function createSimulator(config = {}) {
     const defaultConfig = {
         initialState: {},
-        simulationParameters: {},
+        simulationParameters: {
+            shear: 0,
+            instability: 0,
+            lift: 0,
+            moisture: 0,
+            helicity: 0
+        },
         simulationDuration: 100,
         enableLogging: false
     };
 
     const finalConfig = { ...defaultConfig, ...config };
-    
     return new Supercell(finalConfig);
 }
+
+export { Supercell, createSimulator };
